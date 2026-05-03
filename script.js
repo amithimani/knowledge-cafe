@@ -1,4 +1,4 @@
-// Smooth scroll for anchor links
+// Smooth scroll for anchor links[cite: 2]
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -12,34 +12,66 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Waitlist form handling
+// --- UPDATED WAITLIST FORM HANDLING FOR CLOUDFLARE D1 ---
 const waitlistForm = document.getElementById('waitlistForm');
 const successMessage = document.getElementById('successMessage');
+const emailInput = document.getElementById('email');
+
+// Replace with your actual Worker URL from Step 3
+const WORKER_URL = 'https://YOUR-WORKER-NAME.YOUR-SUBDOMAIN.workers.dev';
 
 if (waitlistForm) {
-    waitlistForm.addEventListener('submit', function(e) {
+    waitlistForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        const email = document.getElementById('email').value;
+        const email = emailInput.value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(email)) {
+        alert("Please enter a valid email address.");
+        submitBtn.disabled = false;
+        submitBtn.innerText = 'Request Access';
+        return; // Stop the submission
+        }
+        const submitBtn = waitlistForm.querySelector('.btn-submit');
         
-        // Here you would typically send the email to your backend
-        // For now, we'll just show the success message
-        console.log('Waitlist signup:', email);
+        // 1. Disable button and show loading state
+        submitBtn.disabled = true;
+        const originalBtnText = submitBtn.innerText;
+        submitBtn.innerText = 'Requesting...';
         
-        // Show success message
-        waitlistForm.style.display = 'none';
-        successMessage.classList.add('show');
-        
-        // Optional: Reset form after a delay
-        setTimeout(() => {
-            waitlistForm.reset();
-            waitlistForm.style.display = 'block';
-            successMessage.classList.remove('show');
-        }, 5000);
+        try {
+            // 2. Send POST request to Cloudflare Worker
+            const response = await fetch(WORKER_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: email })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                // 3. Show success message on status 200[cite: 1, 2]
+                waitlistForm.style.display = 'none';
+                successMessage.classList.add('show');
+            } else {
+                // 4. Handle specific errors like "Email already registered"
+                alert(result.error || 'Something went wrong. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.innerText = originalBtnText;
+            }
+        } catch (error) {
+            console.error('Waitlist error:', error);
+            alert('Failed to connect to the server. Please try again later.');
+            submitBtn.disabled = false;
+            submitBtn.innerText = originalBtnText;
+        }
     });
 }
 
-// Intersection Observer for fade-in animations
+// Intersection Observer for fade-in animations[cite: 2]
 const observerOptions = {
     threshold: 0.1,
     rootMargin: '0px 0px -50px 0px'
@@ -54,7 +86,7 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe feature cards and architecture steps
+// Observe feature cards and architecture steps[cite: 2]
 document.querySelectorAll('.feature-card, .architecture-step, .usp-item').forEach(el => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(20px)';
@@ -62,7 +94,7 @@ document.querySelectorAll('.feature-card, .architecture-step, .usp-item').forEac
     observer.observe(el);
 });
 
-// Add stagger delay to grid items
+// Add stagger delay to grid items[cite: 2]
 document.querySelectorAll('.features-grid .feature-card').forEach((card, index) => {
     card.style.transitionDelay = `${index * 0.1}s`;
 });
