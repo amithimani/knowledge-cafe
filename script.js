@@ -18,7 +18,7 @@ const successMessage = document.getElementById('successMessage');
 const emailInput = document.getElementById('email');
 
 // Replace with your actual Worker URL from Step 3
-const WORKER_URL = 'https://knowledge-cafe.amit-himani-812.workers.dev';
+const WORKER_URL = 'https://knowledge-cafe.amit-himani-812.workers.dev/';
 
 if (waitlistForm) {
     waitlistForm.addEventListener('submit', async function(e) {
@@ -28,13 +28,11 @@ if (waitlistForm) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (!emailRegex.test(email)) {
-        alert("Please enter a valid email address.");
-        submitBtn.disabled = false;
-        submitBtn.innerText = 'Request Access';
-        return; // Stop the submission
+            alert("Please enter a valid email address.");
+            return; // Stop the submission
         }
         const submitBtn = waitlistForm.querySelector('.btn-submit');
-        
+
         // 1. Disable button and show loading state
         submitBtn.disabled = true;
         const originalBtnText = submitBtn.innerText;

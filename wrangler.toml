@@ -1,0 +1,9 @@
+name = "knowledge-cafe"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# D1 Database Binding
+[[d1_databases]]
+binding = "DB"
+database_name = "knowledge_cafe_db"
+database_id = "6a7f3781-7d40-4c20-8308-54a17a189693"
