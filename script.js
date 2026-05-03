@@ -18,7 +18,7 @@ const successMessage = document.getElementById('successMessage');
 const emailInput = document.getElementById('email');
 
 // Replace with your actual Worker URL from Step 3
-const WORKER_URL = 'https://YOUR-WORKER-NAME.YOUR-SUBDOMAIN.workers.dev';
+const WORKER_URL = 'https://knowledge-cafe.amit-himani-812.workers.dev';
 
 if (waitlistForm) {
     waitlistForm.addEventListener('submit', async function(e) {
